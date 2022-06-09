@@ -9,7 +9,7 @@ This project will detect seven major diseases under one platform which are as fo
 <li>Pneumonia detection</li>
 <li>Heart disease detection</li>
 </ul>
-It is a revolutionary project as it can detect the disease with a few clicks at home eith a good
+It is a revolutionary project as it can detect the disease with a few clicks at home with a good
 accuracy and no need to wait for days for the reports and accordingly the disease can be treated
 quickly. AI is a booming technology and can do wonders that humans cannot even imagine. This
 project will detect the seven diseases using CNN (Convolutional Neural Networks) which will
@@ -31,16 +31,19 @@ expanded to more diseases in the future as well.
 The dataset for the project was gathered from multiple sources. Two of them are as follows:
 1. Chest X-ray images (1000 images) were obtained from: https://github.com/ieee8023/covid-chestxray-dataset
 2. CT Scan images (750 images) were obtained from: https://github.com/UCSD-AI4H/COVID-CT/tree/master/Data-split
+
 80% of the images were used for training the models and the remaining 20% for testing.
 
 # Authors
+
 ## Jay Satija
 <ul>
 <li>Github: https://github.com/jaysatija7</li>
-<li>Email: jaysatija712@gmail.com</li>
+  <li>Email: <a href="mailto:jaysatija712@gmail.com">jaysatija712@gmail.com</a></li>
 </ul>
+
 ## Mahak Jain
 <ul>
 <li>Github: https://github.com/mahakjain28</li>
-<li>Email: 28mahakjain2000@gmail.com</li>
+  <li>Email: <a href="mailto:28mahakjain2000@gmail.com">28mahakjain2000@gmail.com</a></li>
 </ul>
