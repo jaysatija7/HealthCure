@@ -9,7 +9,7 @@ This project will detect seven major diseases under one platform which are as fo
 <li>Pneumonia detection</li>
 <li>Heart disease detection</li>
 </ul>
-It is a revolutionary project as it can detect the disease with a few clicks at home eith a good
+It is a revolutionary project as it can detect the disease with a few clicks at home with a good
 accuracy and no need to wait for days for the reports and accordingly the disease can be treated
 quickly. AI is a booming technology and can do wonders that humans cannot even imagine. This
 project will detect the seven diseases using CNN (Convolutional Neural Networks) which will
