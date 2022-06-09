@@ -39,11 +39,11 @@ The dataset for the project was gathered from multiple sources. Two of them are 
 ## Jay Satija
 <ul>
 <li>Github: https://github.com/jaysatija7</li>
-<li>Email: jaysatija712@gmail.com</li>
+  <li>Email: <a href="mailto:jaysatija712@gmail.com">jaysatija712@gmail.com</a></li>
 </ul>
 
 ## Mahak Jain
 <ul>
 <li>Github: https://github.com/mahakjain28</li>
-<li>Email: 28mahakjain2000@gmail.com</li>
+  <li>Email: <a href="mailto:28mahakjain2000@gmail.com">28mahakjain2000@gmail.com</a></li>
 </ul>
