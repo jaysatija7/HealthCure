@@ -7,20 +7,18 @@ import pickle
 import imutils
 import sklearn
 from tensorflow.keras.models import load_model
-# from pushbullet import PushBullet
 import joblib
 import numpy as np
 from tensorflow.keras.applications.vgg16 import preprocess_input
 
 
-covid_model = load_model('models/covid.h5')
-braintumor_model = load_model('models/braintumor.h5')
-alzheimer_model = load_model('models/alzheimer_model.h5')
-diabetes_model = pickle.load(open('models/diabetes.sav', 'rb'))
-heart_model = pickle.load(open('models/heart_disease.pickle.dat', "rb"))
-
-pneumonia_model = load_model('models/pneumonia_model.h5')
-breastcancer_model = joblib.load('models/cancer_model.pkl')
+covid_model = load_model('../models/covid-19_model.h5')
+braintumor_model = load_model('../models/brain_tumor_model.h5')
+alzheimer_model = load_model('../models/alzheimer_model.h5')
+diabetes_model = pickle.load(open('../models/diabetes_model.sav', 'rb'))
+heart_model = pickle.load(open('../models/heart_disease_model.dat', 'rb'))
+pneumonia_model = load_model('../models/pneumonia_model.h5')
+breastcancer_model = joblib.load('../models/breast_cancer_model.pkl')
 
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
