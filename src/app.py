@@ -10,6 +10,41 @@ from tensorflow.keras.models import load_model
 import joblib
 import numpy as np
 from tensorflow.keras.applications.vgg16 import preprocess_input
+from firebase_admin import credentials, firestore, initialize_app, storage
+from google.cloud import storage as gcp_storage
+import json
+import datetime
+
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "healthcure-9f50b-eaeed22fd8f2.json"
+
+# Initialize Firestore DB
+cred = credentials.Certificate('key.json')
+default_app = initialize_app(cred, {
+    'storageBucket': 'healthcure-9f50b.appspot.com'
+})
+bucket = storage.bucket()
+db = firestore.client()
+users_ref = db.collection('users')
+
+
+def upload_blob(bucket_name, source_file_name, destination_blob_name):
+    """Uploads a file to the bucket."""
+    # bucket_name = "your-bucket-name"
+    # source_file_name = "local/path/to/file"
+    # destination_blob_name = "storage-object-name"
+
+    storage_client = gcp_storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(destination_blob_name)
+
+    blob.upload_from_filename(source_file_name)
+
+    print(
+        "File {} uploaded to {}.".format(
+            source_file_name, destination_blob_name
+        )
+    )
 
 
 covid_model = load_model('../models/covid-19_model.h5')
@@ -136,6 +171,22 @@ def resultc():
         gender = request.form['gender']
         age = request.form['age']
         file = request.files['file']
+
+        # Insert Data into Firestore DB
+        firestore_entry = {}
+        firestore_entry['name'] = firstname + " " + lastname
+        firestore_entry['email'] = email
+        firestore_entry['phone'] = phone
+        firestore_entry['gender'] = gender
+        firestore_entry['age'] = age
+        json_string = json.dumps(firestore_entry)
+        json_object = json.loads(json_string)
+        
+        try:
+            users_ref.document(email).set(json_object)
+        except Exception as e:
+            print(e)
+
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -150,6 +201,15 @@ def resultc():
             else:
                 pred = 1
             # pb.push_sms(pb.devices[0],str(phone), 'Hello {},\nYour COVID-19 test results are ready.\nRESULT: {}'.format(firstname,['POSITIVE','NEGATIVE'][pred]))
+            
+            # Upload Image to Firebase Storage
+            blob_image_name = "covid_" + str(pred) + "_" + filename
+            try:
+                upload_blob(bucket.name, 'static/uploads/' + filename, blob_image_name)
+            except Exception as e:
+                print("Upload Failed...")
+                print(e)
+            
             return render_template('resultc.html', filename=filename, fn=firstname, ln=lastname, age=age, r=pred, gender=gender)
 
         else:
@@ -167,6 +227,22 @@ def resultbt():
         gender = request.form['gender']
         age = request.form['age']
         file = request.files['file']
+
+        # Insert Data into Firestore DB
+        firestore_entry = {}
+        firestore_entry['name'] = firstname + " " + lastname
+        firestore_entry['email'] = email
+        firestore_entry['phone'] = phone
+        firestore_entry['gender'] = gender
+        firestore_entry['age'] = age
+        json_string = json.dumps(firestore_entry)
+        json_object = json.loads(json_string)
+        
+        try:
+            users_ref.document(email).set(json_object)
+        except Exception as e:
+            print(e)
+
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -181,6 +257,15 @@ def resultbt():
             else:
                 pred = 1
             # pb.push_sms(pb.devices[0],str(phone), 'Hello {},\nYour Brain Tumor test results are ready.\nRESULT: {}'.format(firstname,['NEGATIVE','POSITIVE'][pred]))
+            
+            # Upload Image to Firebase Storage
+            blob_image_name = "braintumor_" + str(pred) + "_" + filename
+            try:
+                upload_blob(bucket.name, 'static/uploads/' + filename, blob_image_name)
+            except Exception as e:
+                print("Upload Failed...")
+                print(e)
+            
             return render_template('resultbt.html', filename=filename, fn=firstname, ln=lastname, age=age, r=pred, gender=gender)
 
         else:
@@ -204,6 +289,22 @@ def resultd():
         diabetespedigree = request.form['diabetespedigree']
         age = request.form['age']
         skinthickness = request.form['skin']
+        
+        # Insert Data into Firestore DB
+        firestore_entry = {}
+        firestore_entry['name'] = firstname + " " + lastname
+        firestore_entry['email'] = email
+        firestore_entry['phone'] = phone
+        firestore_entry['gender'] = gender
+        firestore_entry['age'] = age
+        json_string = json.dumps(firestore_entry)
+        json_object = json.loads(json_string)
+        
+        try:
+            users_ref.document(email).set(json_object)
+        except Exception as e:
+            print(e)
+        
         pred = diabetes_model.predict(
             [[insulin, bmi, diabetespedigree, age]])
         # pb.push_sms(pb.devices[0],str(phone), 'Hello {},\nYour Diabetes test results are ready.\nRESULT: {}'.format(firstname,['NEGATIVE','POSITIVE'][pred]))
@@ -224,6 +325,22 @@ def resultbc():
         rm = request.form['radius_mean']
         pm = request.form['perimeter_mean']
         cm = request.form['concavity_mean']
+        
+        # Insert Data into Firestore DB
+        firestore_entry = {}
+        firestore_entry['name'] = firstname + " " + lastname
+        firestore_entry['email'] = email
+        firestore_entry['phone'] = phone
+        firestore_entry['gender'] = gender
+        firestore_entry['age'] = age
+        json_string = json.dumps(firestore_entry)
+        json_object = json.loads(json_string)
+        
+        try:
+            users_ref.document(email).set(json_object)
+        except Exception as e:
+            print(e)
+        
         pred = breastcancer_model.predict(
             np.array([cpm, am, rm, pm, cm]).reshape(1, -1))
         # pb.push_sms(pb.devices[0],str(phone), 'Hello {},\nYour Breast Cancer test results are ready.\nRESULT: {}'.format(firstname,['NEGATIVE','POSITIVE'][pred]))
@@ -241,6 +358,22 @@ def resulta():
         gender = request.form['gender']
         age = request.form['age']
         file = request.files['file']
+
+        # Insert Data into Firestore DB
+        firestore_entry = {}
+        firestore_entry['name'] = firstname + " " + lastname
+        firestore_entry['email'] = email
+        firestore_entry['phone'] = phone
+        firestore_entry['gender'] = gender
+        firestore_entry['age'] = age
+        json_string = json.dumps(firestore_entry)
+        json_object = json.loads(json_string)
+        
+        try:
+            users_ref.document(email).set(json_object)
+        except Exception as e:
+            print(e)
+
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -253,6 +386,15 @@ def resulta():
             pred = pred[0].argmax()
             print(pred)
             # pb.push_sms(pb.devices[0],str(phone), 'Hello {},\nYour Alzheimer test results are ready.\nRESULT: {}'.format(firstname,['NonDemented','VeryMildDemented','MildDemented','ModerateDemented'][pred]))
+            
+            # Upload Image to Firebase Storage
+            blob_image_name = "alzheimer_" + str(pred) + "_" + filename
+            try:
+                upload_blob(bucket.name, 'static/uploads/' + filename, blob_image_name)
+            except Exception as e:
+                print("Upload Failed...")
+                print(e)
+
             return render_template('resulta.html', filename=filename, fn=firstname, ln=lastname, age=age, r=0, gender=gender)
 
         else:
@@ -270,6 +412,22 @@ def resultp():
         gender = request.form['gender']
         age = request.form['age']
         file = request.files['file']
+
+        # Insert Data into Firestore DB
+        firestore_entry = {}
+        firestore_entry['name'] = firstname + " " + lastname
+        firestore_entry['email'] = email
+        firestore_entry['phone'] = phone
+        firestore_entry['gender'] = gender
+        firestore_entry['age'] = age
+        json_string = json.dumps(firestore_entry)
+        json_object = json.loads(json_string)
+        
+        try:
+            users_ref.document(email).set(json_object)
+        except Exception as e:
+            print(e)
+
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -284,6 +442,15 @@ def resultp():
             else:
                 pred = 1
             # pb.push_sms(pb.devices[0],str(phone), 'Hello {},\nYour COVID-19 test results are ready.\nRESULT: {}'.format(firstname,['POSITIVE','NEGATIVE'][pred]))
+            
+            # Upload Image to Firebase Storage
+            blob_image_name = "pneumonia_" + str(pred) + "_" + filename
+            try:
+                upload_blob(bucket.name, 'static/uploads/' + filename, blob_image_name)
+            except Exception as e:
+                print("Upload Failed...")
+                print(e)
+            
             return render_template('resultp.html', filename=filename, fn=firstname, ln=lastname, age=age, r=pred, gender=gender)
 
         else:
@@ -307,6 +474,22 @@ def resulth():
         mhra = float(request.form['mhra'])
         age = float(request.form['age'])
         print(np.array([nmv, tcp, eia, thal, op, mhra, age]).reshape(1, -1))
+        
+        # Insert Data into Firestore DB
+        firestore_entry = {}
+        firestore_entry['name'] = firstname + " " + lastname
+        firestore_entry['email'] = email
+        firestore_entry['phone'] = phone
+        firestore_entry['gender'] = gender
+        firestore_entry['age'] = age
+        json_string = json.dumps(firestore_entry)
+        json_object = json.loads(json_string)
+        
+        try:
+            users_ref.document(email).set(json_object)
+        except Exception as e:
+            print(e)
+        
         pred = heart_model.predict(
             np.array([nmv, tcp, eia, thal, op, mhra, age]).reshape(1, -1))
         # pb.push_sms(pb.devices[0],str(phone), 'Hello {},\nYour Diabetes test results are ready.\nRESULT: {}'.format(firstname,['NEGATIVE','POSITIVE'][pred]))
