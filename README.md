@@ -1,4 +1,4 @@
-# HealthCure: An All in One Medical Solution
+# HealthCure: An All-in-One Medical Solution
 This project will detect seven major diseases under one platform which are as follows:
 <ul>
 <li>Covid 19 Detection</li>
