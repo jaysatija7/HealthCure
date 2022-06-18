@@ -1,4 +1,4 @@
-# HealthCure: A One-Stop Medical Solution
+# HealthCure: An All in One Medical Solution
 This project will detect seven major diseases under one platform which are as follows:
 <ul>
 <li>Covid 19 Detection</li>
@@ -19,7 +19,7 @@ the image, and be able to differentiate one from the other. With time, more data
 # Tools and Technologies
 <li>Python - Jupyter Notebook (TensorFlow for Model Training)</li>
 <li>Flask Web Framework (for Backend)</li>
-<li>Google Firebase (for Real-Time Database and Model Deployment)</li>
+<li>Google Firebase (for Real-Time Storage and Firestore Database)</li>
 <li>HTML, CSS, and JS (for Frontend)</li>
 
 # Runtime
